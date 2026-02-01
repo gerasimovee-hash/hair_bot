@@ -1,7 +1,9 @@
 import asyncio
 from aiogram import Bot, Dispatcher, types
+from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
+
 from config import BOT_TOKEN
 from states import HairTest
 from questions import QUESTIONS
@@ -17,12 +19,17 @@ def make_keyboard(options: dict):
         kb.append([KeyboardButton(text=text)])
     return ReplyKeyboardMarkup(keyboard=kb, resize_keyboard=True)
 
-@dp.message(commands=["start"])
+@dp.message(Command("start"))
 async def start(message: types.Message, state: FSMContext):
     await message.answer("Пройдём короткий тест из 8 вопросов 👇")
     await state.set_state(HairTest.form)
+
     q = QUESTIONS["form"]
-    await message.answer(q["text"], reply_markup=make_keyboard(q["options"]))
+    await message.answer(
+        q["text"],
+        reply_markup=make_keyboard(q["options"])
+    )
+
 
 @dp.message(HairTest.form)
 async def form_step(message: types.Message, state: FSMContext):
