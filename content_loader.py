@@ -20,14 +20,17 @@ def build_description(profile: dict, content: dict) -> str:
     parts.append(f'*{content["form"][form]["name"]}*\n')
     parts.append(content["form"][form]["about"])
 
-    bullets = [
-        f'• Толщина: {profile["thickness"]}',
-        f'• Густота: {profile["density"]}',
-        f'• {content["scalp"][scalp]["name"]}',
-        f'• {content["length"][length]["name"]}',
-        f'• {content["porosity"][porosity]["name"]}',
-        f'• {content["damage"][damage]["name"]}',
-    ]
+   labels = content["labels"]
+
+bullets = [
+    f'• {labels["thickness"][profile["thickness"]]}',
+    f'• {labels["density"][profile["density"]]}',
+    f'• {content["scalp"][scalp]["name"]}',
+    f'• {content["length"][length]["name"]}',
+    f'• {labels["porosity"][profile["porosity"]]}',
+    f'• {labels["damage"][profile["damage"]]}',
+]
+
     parts.append(f'\n\n{content["presentation"]["bullets_title"]}\n' + "\n".join(bullets))
 
     # Рекомендации: соберём из модулей и уберём повторы
