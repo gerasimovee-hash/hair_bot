@@ -20,16 +20,16 @@ def build_description(profile: dict, content: dict) -> str:
     parts.append(f'*{content["form"][form]["name"]}*\n')
     parts.append(content["form"][form]["about"])
 
-   labels = content["labels"]
+    labels = content["labels"]
 
-bullets = [
+    bullets = [
     f'• {labels["thickness"][profile["thickness"]]}',
     f'• {labels["density"][profile["density"]]}',
     f'• {content["scalp"][scalp]["name"]}',
     f'• {content["length"][length]["name"]}',
     f'• {labels["porosity"][profile["porosity"]]}',
     f'• {labels["damage"][profile["damage"]]}',
-]
+    ]
 
     parts.append(f'\n\n{content["presentation"]["bullets_title"]}\n' + "\n".join(bullets))
 
