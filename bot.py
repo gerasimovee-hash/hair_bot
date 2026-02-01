@@ -45,6 +45,101 @@ async def form_step(message: types.Message, state: FSMContext):
     q = QUESTIONS["thickness"]
     await message.answer(q["text"], reply_markup=make_keyboard(q["options"]))
 
+@dp.message(HairTest.thickness)
+async def thickness_step(message: types.Message, state: FSMContext):
+    key = get_option_key("thickness", message.text)
+    if not key:
+        await message.answer("Пожалуйста, выбери вариант с кнопки 👇")
+        return
+
+    await state.update_data(thickness=key)
+
+    await state.set_state(HairTest.density)
+    q = QUESTIONS["density"]
+    await message.answer(q["text"], reply_markup=make_keyboard(q["options"]))
+
+@dp.message(HairTest.density)
+async def density_step(message: types.Message, state: FSMContext):
+    key = get_option_key("density", message.text)
+    if not key:
+        await message.answer("Пожалуйста, выбери вариант с кнопки 👇")
+        return
+
+    await state.update_data(density=key)
+
+    await state.set_state(HairTest.scalp)
+    q = QUESTIONS["scalp"]
+    await message.answer(q["text"], reply_markup=make_keyboard(q["options"]))
+
+@dp.message(HairTest.scalp)
+async def scalp_step(message: types.Message, state: FSMContext):
+    key = get_option_key("scalp", message.text)
+    if not key:
+        await message.answer("Пожалуйста, выбери вариант с кнопки 👇")
+        return
+
+    await state.update_data(scalp=key)
+
+    await state.set_state(HairTest.length)
+    q = QUESTIONS["length"]
+    await message.answer(q["text"], reply_markup=make_keyboard(q["options"]))
+
+@dp.message(HairTest.length)
+async def length_step(message: types.Message, state: FSMContext):
+    key = get_option_key("length", message.text)
+    if not key:
+        await message.answer("Пожалуйста, выбери вариант с кнопки 👇")
+        return
+
+    await state.update_data(length=key)
+
+    await state.set_state(HairTest.porosity)
+    q = QUESTIONS["porosity"]
+    await message.answer(q["text"], reply_markup=make_keyboard(q["options"]))
+
+@dp.message(HairTest.porosity)
+async def porosity_step(message: types.Message, state: FSMContext):
+    key = get_option_key("porosity", message.text)
+    if not key:
+        await message.answer("Пожалуйста, выбери вариант с кнопки 👇")
+        return
+
+    await state.update_data(porosity=key)
+
+    await state.set_state(HairTest.damage)
+    q = QUESTIONS["damage"]
+    await message.answer(q["text"], reply_markup=make_keyboard(q["options"]))
+
+@dp.message(HairTest.damage)
+async def damage_step(message: types.Message, state: FSMContext):
+    key = get_option_key("damage", message.text)
+    if not key:
+        await message.answer("Пожалуйста, выбери вариант с кнопки 👇")
+        return
+
+    await state.update_data(damage=key)
+
+    await state.set_state(HairTest.age)
+    q = QUESTIONS["age"]
+    await message.answer(q["text"], reply_markup=make_keyboard(q["options"]))
+
+@dp.message(HairTest.age)
+async def finish(message: types.Message, state: FSMContext):
+    key = get_option_key("age", message.text)
+    if not key:
+        await message.answer("Пожалуйста, выбери вариант с кнопки 👇")
+        return
+
+    await state.update_data(age=key)
+
+    data = await state.get_data()
+    data = apply_corrections(data)
+
+    await message.answer(
+        format_result(data),
+        reply_markup=ReplyKeyboardRemove()
+    )
+    await state.clear()
 
 # ⚠️ Аналогично добавляются остальные шаги (я могу дописать полностью)
 
