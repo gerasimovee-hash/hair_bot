@@ -124,24 +124,6 @@ async def damage_step(message: types.Message, state: FSMContext):
     q = QUESTIONS["age"]
     await message.answer(q["text"], reply_markup=make_keyboard(q["options"]))
 
-@dp.message(HairTest.age)
-async def finish(message: types.Message, state: FSMContext):
-    key = get_option_key("age", message.text)
-    if not key:
-        await message.answer("Пожалуйста, выбери вариант с кнопки 👇")
-        return
-
-    await state.update_data(age=key)
-
-    data = await state.get_data()
-    data = apply_corrections(data)
-
-    await message.answer(
-        format_result(data),
-        reply_markup=ReplyKeyboardRemove()
-    )
-    await state.clear()
-
 # ⚠️ Аналогично добавляются остальные шаги (я могу дописать полностью)
 
 from aiogram.types import ReplyKeyboardRemove
