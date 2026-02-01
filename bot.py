@@ -1,4 +1,5 @@
 import asyncio
+from content_loader import load_content, build_description
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
@@ -143,13 +144,33 @@ async def finish(message: types.Message, state: FSMContext):
 
 # ⚠️ Аналогично добавляются остальные шаги (я могу дописать полностью)
 
+from aiogram.types import ReplyKeyboardRemove
+
 @dp.message(HairTest.age)
 async def finish(message: types.Message, state: FSMContext):
-    await state.update_data(age=message.text)
+    # 1) переводим текст кнопки → код
+    key = get_option_key("age", message.text)
+    if not key:
+        await message.answer("Пожалуйста, выбери вариант с кнопки 👇")
+        return
+
+    # 2) сохраняем код
+    await state.update_data(age=key)
+
+    # 3) собираем профиль и применяем автокоррекции
     data = await state.get_data()
     data = apply_corrections(data)
-    await message.answer(format_result(data), reply_markup=types.ReplyKeyboardRemove())
+
+    # 4) грузим контент и строим финальное описание
+    content = load_content("content.yml")
+    text = build_description(data, content)
+
+    # 5) отправляем
+    await message.answer(text, reply_markup=ReplyKeyboardRemove(), parse_mode="Markdown")
+
+    # 6) очищаем состояние
     await state.clear()
+
 
 async def main():
     await dp.start_polling(bot)
